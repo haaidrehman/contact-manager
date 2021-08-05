@@ -104,11 +104,11 @@ function App() {
 
   return (
     <>
-      <HashRouter>
+      <HashRouter basename='/'>
         <div className="container">
           <div className="add-contact-form center-align-item">
             <Header />
-            <ContactList contactList={contacts} contactToSearch={contactToSearch} />
+
             <Switch>
               <Route exact path="/add" render={(props) => <AddContact {...props} addContactHandler={addContactHandler} />} />
               {/*  Using render function of Route Component the render function will receive some additional props just like above */}
