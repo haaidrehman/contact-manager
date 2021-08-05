@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { HashRouter, Switch, Route } from 'react-router-dom';
 import 'materialize-css/dist/css/materialize.min.css';
 import M from 'materialize-css/dist/js/materialize.min.js'
 import '../css/style.css';
@@ -18,7 +18,7 @@ export let TransferDeleteItemHandler = createContext();
 
 firebase.initializeApp(firebaseConfig);
 
-function App() {  
+function App() {
 
   let [contacts, setContacts] = useState([]);
   let [contactToSearch, setContactToSearch] = useState('');
@@ -28,30 +28,30 @@ function App() {
   let addContactHandler = (getContacts) => {
 
     let dataToPost = {
-          id: uuid(),
-        ...getContacts
+      id: uuid(),
+      ...getContacts
     };
- 
+
 
     firebase.database().ref("contacts/" + dataToPost.id).set(dataToPost)
-    .then(() => {
+      .then(() => {
         setContacts([...contacts, dataToPost]);
-    })
-    .catch();
+      })
+      .catch();
 
   }
 
 
   useEffect(() => {
 
-     firebase.database().ref("contacts").on("value", snapshot => {
+    firebase.database().ref("contacts").on("value", snapshot => {
       let contactList = [];
-          snapshot.forEach(snap => {
-            contactList.push(snap.val());
-          });
+      snapshot.forEach(snap => {
+        contactList.push(snap.val());
+      });
 
-        setContacts(contactList);
-     });
+      setContacts(contactList);
+    });
 
   }, []);
 
@@ -60,10 +60,10 @@ function App() {
 
     e.preventDefault();
 
-   let userRef = firebase.database().ref('contacts/'+id);
+    let userRef = firebase.database().ref('contacts/' + id);
 
     userRef.remove().then(() => {
-        let filteredContacts = contacts.filter((el) => {
+      let filteredContacts = contacts.filter((el) => {
         return el.id !== id;
       });
 
@@ -80,21 +80,21 @@ function App() {
       alert('All fields are required!');
       return;
     }
-  
+
 
     firebase.database().ref("contacts/" + item.id).update({ id: item.id, name: item.name, email: item.email, image: item.image })
-    .then(() => {
-          let newContactsObj = contacts.map((contact) => {
-        return contact.id === item.id ? { id: item.id, name: item.name, email: item.email, image: item.image } : contact;
+      .then(() => {
+        let newContactsObj = contacts.map((contact) => {
+          return contact.id === item.id ? { id: item.id, name: item.name, email: item.email, image: item.image } : contact;
 
+        });
+        setContacts([...newContactsObj]);
+        item.changeUrl('/');
+      })
+      .catch(() => {
+        console.log('Facing problem to update');
       });
-      setContacts([...newContactsObj]);
-      item.changeUrl('/');
-    })
-    .catch(() => {
-      console.log('Facing problem to update');
-    });
-    
+
   }
 
 
@@ -104,7 +104,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+      <HashRouter>
         <div className="container">
           <div className="add-contact-form center-align-item">
             <Header />
@@ -130,7 +130,7 @@ function App() {
 
           </div>
         </div>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
